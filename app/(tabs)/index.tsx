@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   FlatList,
   Image,
@@ -107,14 +107,14 @@ export default function Home() {
         style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
         onPress={() => router.push('/explore')}
       >
-        <Text style={styles.buttonText}>Explorar Serviços</Text>
+        <Text style={styles.buttonText}>Serviços</Text>
       </Pressable>
 
       <Pressable
         style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
         onPress={() => setShowChat(true)}
       >
-        <Text style={styles.buttonText}>Chat com a Barbearia</Text>
+        <Text style={styles.buttonText}>Chat</Text>
       </Pressable>
 
       <Text style={styles.footer}>© 2025 Barbearia LK Pro</Text>
@@ -153,11 +153,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 80,
     borderRadius: 50,
     marginBottom: 20,
-    elevation: 6,
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    width: 280,
+    alignItems: 'center',
   },
   buttonPressed: {
     backgroundColor: '#FFC107',
-    elevation: 2,
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   },
   buttonText: {
     color: '#121212',
