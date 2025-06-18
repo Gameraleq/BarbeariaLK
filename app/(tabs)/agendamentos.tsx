@@ -1,26 +1,30 @@
 import { getDatabase, onValue, push, ref, remove } from 'firebase/database';
 import { useEffect, useState } from 'react';
 import { Alert, Button, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import app from '../../config/firebase';
+import app, { auth } from '../../config/firebase';
 
 interface Agendamento {
   key: string;
-  Nome: string;
   Data: string;
   Servico: string;
 }
 
 export default function Agendamentos() {
-  const [nome, setNome] = useState('');
   const [data, setData] = useState('');
   const [servico, setServico] = useState('');
   const [lista, setLista] = useState<Agendamento[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Carregar agendamentos do Realtime Database
+  // Carregar agendamentos do usuário autenticado
   useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) {
+      setLoading(false);
+      Alert.alert('Erro', 'Usuário não autenticado.');
+      return;
+    }
     const db = getDatabase(app);
-    const agendamentosRef = ref(db, 'Agendamentos');
+    const agendamentosRef = ref(db, `Agendamentos/${user.uid}`);
     const unsubscribe = onValue(agendamentosRef, (snapshot) => {
       const data = snapshot.val();
       const agendamentos: Agendamento[] = [];
@@ -58,7 +62,12 @@ export default function Agendamentos() {
   };
 
   async function handleAdicionar() {
-    if (!nome || !data || !servico) {
+    const user = auth.currentUser;
+    if (!user) {
+      Alert.alert('Erro', 'Usuário não autenticado.');
+      return;
+    }
+    if (!data || !servico) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
@@ -68,13 +77,11 @@ export default function Agendamentos() {
     }
     try {
       const db = getDatabase(app);
-      const agendamentosRef = ref(db, 'Agendamentos');
+      const agendamentosRef = ref(db, `Agendamentos/${user.uid}`);
       await push(agendamentosRef, {
-        Nome: nome,
         Data: data,
         Servico: servico
       });
-      setNome('');
       setData('');
       setServico('');
       Alert.alert('Sucesso', 'Agendamento adicionado!');
@@ -91,13 +98,6 @@ export default function Agendamentos() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Novo Agendamento</Text>
-      <TextInput
-        placeholder="Nome"
-        value={nome}
-        onChangeText={(text) => setNome(text.slice(0, 50))}
-        style={styles.input}
-        maxLength={50}
-      />
       <TextInput
         placeholder="Data (DD/MM/AAAA)"
         value={data}
@@ -125,11 +125,16 @@ export default function Agendamentos() {
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => (
             <View style={styles.item}>
-              <Text style={{ flex: 1 }}>{item.Nome} - {item.Data} - {item.Servico}</Text>
+              <Text style={{ flex: 1 }}>{item.Data} - {item.Servico}</Text>
               <TouchableOpacity onPress={async () => {
+                const user = auth.currentUser;
+                if (!user) {
+                  Alert.alert('Erro', 'Usuário não autenticado.');
+                  return;
+                }
                 try {
                   const db = getDatabase(app);
-                  await remove(ref(db, `Agendamentos/${item.key}`));
+                  await remove(ref(db, `Agendamentos/${user.uid}/${item.key}`));
                 } catch (error: any) {
                   let mensagem = 'Não foi possível deletar o agendamento.';
                   if (error && (error.message || error.code)) {

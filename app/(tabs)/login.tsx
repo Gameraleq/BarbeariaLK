@@ -1,23 +1,35 @@
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { auth } from '../../config/firebase';
 
 export default function Login() {
   const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Erro', 'Preencha todos os campos!');
       return;
     }
-
-    // Aqui você colocaria a validação real, API, etc.
-    // Por enquanto só simula login:
-    Alert.alert('Sucesso', `Bem-vindo(a), ${email}!`);
-    router.replace('/'); // Vai pra Home e remove o Login da pilha
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setLoading(false);
+      Alert.alert('Sucesso', `Bem-vindo(a), ${email}!`);
+      router.replace('/home'); // Vai pra Home e remove o Login da pilha
+    } catch (error: any) {
+      setLoading(false);
+      let mensagem = 'Erro ao fazer login. ';
+      if (error && (error.message || error.code)) {
+        mensagem += `\nMotivo: ${error.message || error.code}`;
+      }
+      Alert.alert('Erro', mensagem);
+    }
   };
 
   return (
@@ -46,8 +58,9 @@ export default function Login() {
       <Pressable
         style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
         onPress={handleLogin}
+        disabled={loading}
       >
-        <Text style={styles.buttonText}>Entrar</Text>
+        <Text style={styles.buttonText}>{loading ? 'Entrando...' : 'Entrar'}</Text>
       </Pressable>
     </View>
   );

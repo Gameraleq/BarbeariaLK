@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -10,7 +11,11 @@ const firebaseConfig = {
   databaseURL: process.env.EXPO_PUBLIC_FIREBASE_DATABASE_URL,
 };
 
+console.log('FIREBASE CONFIG', firebaseConfig);
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
+export { auth };
 export default app; 
