@@ -6,11 +6,13 @@ import app, { auth } from '../../config/firebase';
 interface Agendamento {
   key: string;
   Data: string;
+  Hora: string;
   Servico: string;
 }
 
 export default function Agendamentos() {
   const [data, setData] = useState('');
+  const [hora, setHora] = useState('');
   const [servico, setServico] = useState('');
   const [lista, setLista] = useState<Agendamento[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,13 +63,24 @@ export default function Agendamentos() {
     return regex.test(data);
   };
 
+  // Função para formatar a hora no padrão HH:MM e limitar a 4 dígitos
+  const formatarHora = (text: string) => {
+    // Remove tudo que não for número
+    let cleaned = text.replace(/\D/g, '');
+    cleaned = cleaned.slice(0, 4); // Limita a 4 dígitos
+    if (cleaned.length <= 2) {
+      return cleaned;
+    }
+    return `${cleaned.slice(0, 2)}:${cleaned.slice(2, 4)}`;
+  };
+
   async function handleAdicionar() {
     const user = auth.currentUser;
     if (!user) {
       Alert.alert('Erro', 'Usuário não autenticado.');
       return;
     }
-    if (!data || !servico) {
+    if (!data || !hora || !servico) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
@@ -75,14 +88,20 @@ export default function Agendamentos() {
       Alert.alert('Erro', 'Por favor, insira uma data válida no formato DD/MM/AAAA.');
       return;
     }
+    if (!validarHora(hora)) {
+      Alert.alert('Erro', 'Por favor, insira uma hora válida no formato HH:MM.');
+      return;
+    }
     try {
       const db = getDatabase(app);
       const agendamentosRef = ref(db, `Agendamentos/${user.uid}`);
       await push(agendamentosRef, {
         Data: data,
+        Hora: hora,
         Servico: servico
       });
       setData('');
+      setHora('');
       setServico('');
       Alert.alert('Sucesso', 'Agendamento adicionado!');
     } catch (error: any) {
@@ -107,6 +126,14 @@ export default function Agendamentos() {
         keyboardType="numeric"
       />
       <TextInput
+        placeholder="Hora (HH:MM)"
+        value={hora}
+        onChangeText={(text) => setHora(formatarHora(text))}
+        style={styles.input}
+        maxLength={5}
+        keyboardType="numeric"
+      />
+      <TextInput
         placeholder="Serviço"
         value={servico}
         onChangeText={(text) => setServico(text.slice(0, 255))}
@@ -125,7 +152,7 @@ export default function Agendamentos() {
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => (
             <View style={styles.item}>
-              <Text style={{ flex: 1 }}>{item.Data} - {item.Servico}</Text>
+              <Text style={{ flex: 1 }}>{item.Data} {item.Hora ? `às ${item.Hora}` : ''} - {item.Servico}</Text>
               <TouchableOpacity onPress={async () => {
                 const user = auth.currentUser;
                 if (!user) {
