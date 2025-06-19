@@ -5,8 +5,6 @@ import { useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import app, { auth } from '../../config/firebase';
 
-console.log('auth:', auth);
-
 export default function RegisterScreen() {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -15,18 +13,15 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    console.log('Botão pressionado');
     if (!name || !email || !password) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
     setLoading(true);
     try {
-      console.log('Iniciando cadastro...');
       // Cria usuário no Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log('Usuário criado:', user.uid);
       // Salva dados adicionais no Realtime Database
       const db = getDatabase(app);
       const userRef = ref(db, 'Usuários/' + user.uid);
@@ -34,13 +29,11 @@ export default function RegisterScreen() {
         name,
         email
       });
-      console.log('Dados salvos no banco de dados');
       setLoading(false);
       // Usuário já está autenticado automaticamente após cadastro
       router.replace('/home'); // Redireciona para home.tsx
     } catch (error: any) {
       setLoading(false);
-      console.error('Erro no cadastro:', error);
       let mensagem = 'Erro ao cadastrar. ';
       if (error && (error.message || error.code)) {
         mensagem += `\nMotivo: ${error.message || error.code}`;

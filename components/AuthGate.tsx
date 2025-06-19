@@ -14,16 +14,13 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('onAuthStateChanged fired. user:', user);
       setLoading(false);
       if (user) {
         if (publicRoutes.includes(pathname)) {
-          console.log('Usuário autenticado, redirecionando para /home');
           router.replace('/home');
         }
       } else {
         if (!publicRoutes.includes(pathname)) {
-          console.log('Usuário não autenticado, redirecionando para /');
           router.replace('/');
         }
       }

@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function ExploreScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tela Explore</Text>
+      <Text style={styles.title}>FEATURE NOT AVAILABLE</Text>
 
       <Link href="/" asChild>
         <TouchableOpacity style={styles.button}>

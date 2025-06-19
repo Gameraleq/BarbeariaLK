@@ -1,50 +1,120 @@
-# Welcome to your Expo app 👋
+# Barbearia LK Pro 🪒
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicativo móvel para agendamentos de barbearia desenvolvido com React Native e Expo.
 
-## Get started
+## 🚀 Funcionalidades
 
-1. Install dependencies
+- **Sistema de Autenticação**: Cadastro e login de usuários
+- **Agendamentos**: Criação, visualização e exclusão de agendamentos
+- **Chat Interno**: Sistema de mensagens integrado
+- **Interface Moderna**: Design escuro com tema dourado
 
-   ```bash
-   npm install
-   ```
+## 🛠️ Tecnologias
 
-2. Start the app
+- React Native
+- Expo Router
+- Firebase (Auth + Realtime Database)
+- TypeScript
 
-   ```bash
-   npx expo start
-   ```
+## 📋 Pré-requisitos
 
-In the output, you'll find options to open the app in a
+- Node.js (versão 18 ou superior)
+- npm ou yarn
+- Expo CLI
+- Conta no Firebase
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## ⚙️ Configuração
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+### 1. Clone o repositório
 ```bash
-npm run reset-project
+git clone https://github.com/seu-usuario/barbearia-lk-pro.git
+cd barbearia-lk-pro
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Instale as dependências
+```bash
+npm install
+```
 
-## Learn more
+### 3. Configure as variáveis de ambiente
 
-To learn more about developing your project with Expo, look at the following resources:
+1. Copie o arquivo de exemplo:
+```bash
+cp env.example .env
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+2. Edite o arquivo `.env` com suas credenciais do Firebase:
+```env
+EXPO_PUBLIC_FIREBASE_API_KEY=sua_api_key_aqui
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=seu_projeto.firebaseapp.com
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=seu_projeto_id
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=seu_projeto.appspot.com
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=seu_sender_id
+EXPO_PUBLIC_FIREBASE_APP_ID=seu_app_id
+EXPO_PUBLIC_FIREBASE_DATABASE_URL=https://seu_projeto-default-rtdb.firebaseio.com
+```
 
-## Join the community
+### 4. Configure o Firebase
 
-Join our community of developers creating universal apps.
+1. Crie um projeto no [Firebase Console](https://console.firebase.google.com/)
+2. Ative a **Authentication** com email/senha
+3. Crie um **Realtime Database** com regras de segurança
+4. Copie as credenciais para o arquivo `.env`
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 5. Execute o projeto
+```bash
+npx expo start
+```
+
+## 📱 Como usar
+
+1. **Cadastro**: Crie uma conta com nome, email e senha
+2. **Login**: Faça login com suas credenciais
+3. **Agendamentos**: Crie novos agendamentos com data, hora e serviço
+4. **Chat**: Use o chat interno para comunicação
+
+## 🔒 Segurança
+
+- ✅ Variáveis de ambiente configuradas
+- ✅ Logs de debug removidos
+- ✅ Autenticação Firebase implementada
+- ✅ Validação de dados implementada
+
+## 📁 Estrutura do Projeto
+
+```
+BarbeariaLK/
+├── app/                    # Telas da aplicação
+│   ├── (tabs)/            # Navegação por abas
+│   │   ├── index.tsx      # Tela de boas-vindas
+│   │   ├── login.tsx      # Login
+│   │   ├── register.tsx   # Cadastro
+│   │   ├── home.tsx       # Tela principal
+│   │   ├── agendamentos.tsx # Sistema de agendamentos
+│   │   └── explore.tsx    # Serviços (em desenvolvimento)
+│   └── _layout.tsx        # Layout principal
+├── components/            # Componentes reutilizáveis
+├── config/               # Configurações (Firebase)
+├── constants/            # Constantes da aplicação
+└── env.example          # Exemplo de variáveis de ambiente
+```
+
+## 🤝 Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+## 📞 Suporte
+
+Para suporte, envie um email para seu-email@exemplo.com ou abra uma issue no GitHub.
+
+---
+
+Desenvolvido com ❤️ para a Barbearia LK Pro

@@ -74,6 +74,28 @@ export default function Agendamentos() {
     return `${cleaned.slice(0, 2)}:${cleaned.slice(2, 4)}`;
   };
 
+  // Função para validar a hora
+  const validarHora = (hora: string) => {
+    const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (!regex.test(hora)) {
+      return false;
+    }
+    
+    const [horas, minutos] = hora.split(':').map(Number);
+    
+    // Validar se as horas estão entre 0-23
+    if (horas < 0 || horas > 23) {
+      return false;
+    }
+    
+    // Validar se os minutos estão entre 0-59
+    if (minutos < 0 || minutos > 59) {
+      return false;
+    }
+    
+    return true;
+  };
+
   async function handleAdicionar() {
     const user = auth.currentUser;
     if (!user) {
@@ -110,7 +132,6 @@ export default function Agendamentos() {
         mensagem += `\nMotivo: ${error.message || error.code}`;
       }
       Alert.alert('Erro', mensagem);
-      console.error('Erro ao adicionar agendamento:', error);
     }
   }
 
@@ -168,7 +189,6 @@ export default function Agendamentos() {
                     mensagem += `\nMotivo: ${error.message || error.code}`;
                   }
                   Alert.alert('Erro', mensagem);
-                  console.error('Erro ao deletar agendamento:', error);
                 }
               }}>
                 <Text style={styles.trashIcon}>🗑️</Text>
